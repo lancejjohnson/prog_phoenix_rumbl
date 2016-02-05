@@ -1,6 +1,6 @@
 defmodule Rumbl.User do
 
-  use Rumbl.User, :model
+  use Rumbl.Web, :model
 
   schema "users" do
     field :name, :string
