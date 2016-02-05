@@ -11,4 +11,10 @@ defmodule Rumbl.UserController do
     render conn, "show.html", user: user
   end
 
+  def new(conn, _params) do
+    # Calls the `changeset` function passing an empty user (i.e. user with only default fields)
+    changeset = User.changeset(%User{})
+    render conn, "new.html", changeset: changeset
+  end
+
 end
