@@ -17,17 +17,16 @@ defmodule Rumbl.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [
-      mod: {Rumbl, []},
+    [ mod: {Rumbl, []},
       applications: [
         :phoenix,
-        :phoenix_html, 
+        :phoenix_html,
         :cowboy,
         :logger,
         :gettext,
         :phoenix_ecto,
-        :postgrex, 
-        :comonein
+        :postgrex,
+        :comeonin
       ]
     ]
   end
