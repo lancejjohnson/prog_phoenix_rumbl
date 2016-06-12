@@ -5,7 +5,13 @@ defmodule Rumbl.UserController do
   alias Rumbl.Repo
   alias Rumbl.User
 
-  plug :authenticate when action in [:index, :show]
+  # A function plug is any function that accepts a conn and opts and returns a
+  # conn. Rumbl.Auth.authenticate_user is such a function. It is included in
+  # the Rumbl.Web.controller definition. We can call this function via `plug`
+  # instead of calling it in individual functions within this controller
+  # because it is available to the controller and meets the plug function
+  # definition.
+  plug :authenticate_user when action in [:index, :show]
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -33,17 +39,6 @@ defmodule Rumbl.UserController do
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
-    end
-  end
-
-  defp authenticate(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must be logged in to access that page")
-      |> redirect(to: page_path(conn, :index))
-      |> halt() # Called to prevent any downstream changes to conn
     end
   end
 

@@ -22,6 +22,14 @@ defmodule Rumbl.Router do
     resources "/sessions", SessionController, only: [:new, :create, :delete]
   end
 
+  scope "/manage", Rumbl do
+    # pipe_through accepts 1..n pipelines. Any plug function or module can be
+    # included in the list.
+    pipe_through [:browser, :authenticate_user]
+
+    resources "/videos", VideoController
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", Rumbl do
   #   pipe_through :api
