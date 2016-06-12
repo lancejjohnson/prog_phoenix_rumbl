@@ -23,6 +23,9 @@ defmodule Rumbl.VideoController do
     )
   end
 
+  @doc """
+  Gets all the videos associated with the current user.
+  """
   def index(conn, _params, user) do
     videos = user|> user_videos |> Repo.all
     render(conn, "index.html", videos: videos)
@@ -45,6 +48,11 @@ defmodule Rumbl.VideoController do
     render conn, "new.html", changeset: changeset
   end
 
+  @doc """
+  Create a changest that includes the user_id of the current user to associate
+  that video with the user. Add the form submitted parameters when making the
+  changeset.
+  """
   def create(conn, %{"video" => video_params}, user) do
     changeset = user |> build_assoc(:videos) |> Video.changeset(video_params)
 
@@ -59,18 +67,18 @@ defmodule Rumbl.VideoController do
   end
 
   def show(conn, %{"id" => id}, user) do
-    video = user |> user_videos |> Repo.get!(id)
+    video = get_user_video(user, id)
     render(conn, "show.html", video: video)
   end
 
   def edit(conn, %{"id" => id}, user) do
-    video = user |> user_videos |> Repo.get!(id)
+    video = get_user_video(user, id)
     changeset = Video.changeset(video)
     render(conn, "edit.html", video: video, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "video" => video_params}, user) do
-    video = user |> user_videos |> Repo.get!(id)
+    video = get_user_video(user, id)
     changeset = Video.changeset(video, video_params)
 
     case Repo.update(changeset) do
@@ -84,7 +92,7 @@ defmodule Rumbl.VideoController do
   end
 
   def delete(conn, %{"id" => id}, user) do
-    video = user |> user_videos |> Repo.get!(id)
+    video = get_user_video(user, id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
@@ -96,4 +104,5 @@ defmodule Rumbl.VideoController do
   end
 
   defp user_videos(user), do: assoc(user, :videos)
+  defp get_user_video(user, id), do: user |> user_videos |> Repo.get!(id)
 end
