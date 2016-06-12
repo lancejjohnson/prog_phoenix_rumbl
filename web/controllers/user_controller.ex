@@ -2,6 +2,7 @@ defmodule Rumbl.UserController do
 
   use Rumbl.Web, :controller
   alias Rumbl.Auth
+  alias Rumbl.Repo
   alias Rumbl.User
 
   plug :authenticate when action in [:index, :show]
