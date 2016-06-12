@@ -7,6 +7,8 @@ defmodule Rumbl.User do
     field :username, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    # Note the explicit identification of the associated model.
+    has_many :videos, Rumbl.Video
 
     timestamps
   end
