@@ -11,13 +11,31 @@ defmodule Rumbl.VideoController do
     render(conn, "index.html", videos: videos)
   end
 
+  @doc """
+  Create a Video changeset that includes the user id of the current user so
+  that the video is associated with that user.
+
+  This controller is scoped to /manage, which pipes through the
+  authenticate_user function, so you can never reach this route without
+  having a current_user in the conn.assigns.
+
+  build_assoc returns the struct defined by the association. User is associated
+  with :videos by Rumbl.Video, so a %Rumbl.Video{} struct is returned.
+  """
   def new(conn, _params) do
-    changeset = Video.changeset(%Video{})
-    render(conn, "new.html", changeset: changeset)
+    changeset =
+      conn.assigns.current_user
+      |> build_assoc(:videos)
+      |> Video.changeset()
+
+    render conn, "new.html", changeset: changeset
   end
 
   def create(conn, %{"video" => video_params}) do
-    changeset = Video.changeset(%Video{}, video_params)
+    changeset =
+      conn.assigns.current_user
+      |> build_assoc(:videos)
+      |> Video.changeset(video_params)
 
     case Repo.insert(changeset) do
       {:ok, _video} ->
