@@ -27,7 +27,7 @@ defmodule Rumbl.VideoController do
   Gets all the videos associated with the current user.
   """
   def index(conn, _params, user) do
-    videos = user|> user_videos |> Repo.all
+    videos = user |> user_videos |> Repo.all
     render(conn, "index.html", videos: videos)
   end
 

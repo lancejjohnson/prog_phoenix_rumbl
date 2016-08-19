@@ -2,10 +2,16 @@ defmodule Rumbl.Auth do
   import Plug.Conn
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
+  @doc """
+  `init` is one of the two fns required to use a module as a plug.
+  """
   def init(opts) do
     Keyword.fetch!(opts, :repo)
   end
 
+  @doc """
+  `call` is one of the two fns required to use a module as a plug.
+  """
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
     user = user_id && repo.get(Rumbl.User, user_id)
