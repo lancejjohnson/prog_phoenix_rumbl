@@ -15,9 +15,24 @@ defmodule Rumbl.Category do
 
   If no params are provided, an invalid changeset is returned
   with no validation performed.
+
+  The "model" is an instance of the Rumbl.Category struct.
+  The "params" is a Map of key-value pairs to be applied as changes to the struct
   """
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+  end
+
+  @doc """
+  query is anything that implements the Ecto.Queryable protocol, including
+  the model itself.
+  """
+  def alphabetical(query) do
+    from c in query, order_by: c.name
+  end
+
+  def names_and_ids(query) do
+    from c in query, select: {c.name, c.id}
   end
 end

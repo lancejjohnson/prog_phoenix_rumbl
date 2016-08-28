@@ -3,8 +3,11 @@ defmodule Rumbl.VideoController do
 
   # Allows you to use `Video` instead of `Rumbl.Video`
   alias Rumbl.Video
+  alias Rumbl.Category
 
   plug :scrub_params, "video" when action in [:create, :update]
+
+  plug :load_categories when action in [:new, :create, :edit, :update]
 
   @doc """
   Every controller has a default action function that determines the arguments
@@ -54,6 +57,8 @@ defmodule Rumbl.VideoController do
   changeset.
   """
   def create(conn, %{"video" => video_params}, user) do
+    require IEx
+    IEx.pry
     changeset = user |> build_assoc(:videos) |> Video.changeset(video_params)
 
     case Repo.insert(changeset) do
@@ -104,5 +109,15 @@ defmodule Rumbl.VideoController do
   end
 
   defp user_videos(user), do: assoc(user, :videos)
+
   defp get_user_video(user, id), do: user |> user_videos |> Repo.get!(id)
+
+  defp load_categories(conn, _opts) do
+    categories =
+      Category
+      |> Category.alphabetical
+      |> Category.names_and_ids
+      |> Repo.all
+    assign(conn, :categories, categories)
+  end
 end
