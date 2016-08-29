@@ -11,11 +11,23 @@ defmodule Rumbl.Auth do
 
   @doc """
   `call` is one of the two fns required to use a module as a plug.
+
+  NOTA BENA: The first cond case was written to make testing authorized
+  actions easier. It is a controversial choice for that reason. It alleviates
+  the need for complicated test setup code at the price of making a production
+  decision for the sake of testing.
   """
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
-    user = user_id && repo.get(Rumbl.User, user_id)
-    assign(conn, :current_user, user)
+
+    cond do
+      user = conn.assigns[:current_user] ->
+        conn
+      user = user_id && repo.get(Rumbl.User, user_id) ->
+        assign(conn, :current_user, user)
+      true ->
+        assign(conn, :current_user, nil)
+    end
   end
 
   def login(conn, user) do
