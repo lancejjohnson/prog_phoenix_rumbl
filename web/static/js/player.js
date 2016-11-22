@@ -29,7 +29,7 @@ const Player = {
   },
 
   getCurrentTime() {
-    return Math.floo(this.player.getCurrentTime() * 1000)
+    return Math.floor(this.player.getCurrentTime() * 1000)
   },
 
   seekTo(millsec) {
