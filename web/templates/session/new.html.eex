@@ -1,5 +1,11 @@
 <h1>Login</h1>
 
+<%#
+This form isn't back by a changeset because a session isn't a specific
+entity that is being created/edited/etc. Rather, it uses the conn
+and presents the fields necessary to submit to the controller.
+%>
+
 <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f -> %>
   <div class="form-group">
     <%= text_input f, :username, placeholder: "Username", class: "form-control" %>
